@@ -1,0 +1,25 @@
+$filterZakazy[] = 
+   Array(
+      "LOGIC"=>"OR",
+      Array(
+         "UF_CHECK_SOBRAN"=>false
+      ),
+      Array(
+         "UF_SOBRAN_NOT_FULL"=>true,
+         "UF_CHECK_SOBRAN"=>true,
+         "<UF_DATE_SOBRAN"=>$bDateTo
+      )
+   );
+// $filterZakazy[">UF_DATE_NO"] = $bDateTo;
+// $filterZakazy[">UF_DATE_NO_SIZE"] = $bDateTo;
+foreach ($site as $keyId => $valSite) {
+	$filterZakazy["=UF_SITE"] = $keyId;
+	$filterZakazy['UF_ORDER_ID'] = array_keys($orders[$keyId]);
+
+	if(!empty($ordersNewStat[$keyId]))$filterZakazy['UF_ORDER_ID'] = array_merge(array_keys($orders[$keyId]), $ordersNewStat[$keyId]);
+	else $filterZakazy['UF_ORDER_ID'] = array_keys($orders[$keyId]);
+
+	if(!empty($filterZakazy['UF_ORDER_ID']))
+		$zakazy[$keyId] = Local\Hlblock\Basket::getList('ID', ['filter'=>$filterZakazy, 'order'=>["ID"=>"ASC"]], true);
+
+}
